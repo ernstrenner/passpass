@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PassPass – A Robust, Offline Password Generator</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 2rem;
+      max-width: 700px;
+      margin: auto;
+      background: #f9f9f9;
+      color: #222;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.3rem;
+    }
+    em {
+      color: #555;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 1.2rem;
+    }
+    input[type="number"], textarea {
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    .rot-input {
+      width: 5rem;
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      font-family: monospace;
+      resize: vertical;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      border: none;
+      background-color: #3b82f6;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2563eb;
+    }
+    .output {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      word-break: break-word;
+      background: #eef;
+      padding: 1rem;
+      border-radius: 6px;
+      font-family: monospace;
+    }
+    .message {
+      color: green;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    details {
+      margin-top: 1.6rem;
+    }
+    summary {
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+      color: #0366d6;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+    }
+    details:first-of-type {
+      margin-top: 80px;
+    }
+  </style>
+</head>
+<body>
+  <h1>PassPass</h1>
+  <p><em>Protected Access. Safe. Secure.</em></p>
+
+  <label for="rot">ROT value (2–25):</label>
+  <input type="text" id="rot" class="rot-input" maxlength="2" value="7" inputmode="numeric" pattern="[0-9]*">
+
+  <label for="phrase">Enter your pass phrase:</label>
+  <textarea id="phrase" rows="2" maxlength="256" placeholder="e.g. My favorite hotel in Lisbon is a hidden gem."></textarea>
+
+  <button onclick="transform()">Initiate Transformation</button>
+
+  <div class="output" id="output" style="display:none;"></div>
+  <button onclick="copyToClipboard()" id="copyBtn" style="display:none;">Copy to Clipboard</button>
+  <div class="message" id="message"></div>
+
+  <details>
+    <summary>How it works</summary>
+    <p>This tool applies three simple transformations to your input:</p>
+    <ol>
+      <li><strong>ROT-N cipher</strong>: shifts letters forward by your chosen number</li>
+      <li><strong>Spaces are removed</strong></li>
+      <li><strong>The result is reversed</strong></li>
+    </ol>
+    <p>PassPass runs fully in your browser. It stores nothing — and works offline.</p>
+    <p>For real-life use cases and printable instructions, see the <a href="README.md" target="_blank">README</a> or the <a href="https://ernstrenner.com/members/passpass-a-robust-password-generator-for-people-on-the-move/" target="_blank">blog post</a>.</p>
+  </details>
+
+  <details>
+    <summary>What is ROT?</summary>
+    <p><strong>ROT</strong> stands for "rotate." A <strong>ROT-7</strong> cipher means each letter is shifted forward 7 places in the alphabet.</p>
+    <p>For example: <code>A → H</code>, <code>B → I</code>, ..., <code>Z → G</code>. It loops around after Z.</p>
+    <p>Only alphabet letters are changed. Numbers, punctuation, and emojis stay the same.</p>
+  </details>
+
+  <script>
+    // Shift a single character forward by N (ROT-N logic)
+    function rotChar(c, n) {
+      const isUpper = c >= 'A' && c <= 'Z';
+      const isLower = c >= 'a' && c <= 'z';
+      if (!isUpper && !isLower) return c;
+
+      const base = isUpper ? 65 : 97;
+      return String.fromCharCode(((c.charCodeAt(0) - base + n) % 26) + base);
+    }
+
+    // Apply ROT-N to an entire string
+    function rotAll(str, n) {
+      return str.split('').map(c => rotChar(c, n)).join('');
+    }
+
+    function transform() {
+      const rotInput = document.getElementById("rot");
+      const phraseInput = document.getElementById("phrase");
+
+      // Enforce clean 2-digit-only ROT values
+      rotInput.value = rotInput.value.replace(/\D/g, '').slice(0, 2);
+      let rot = parseInt(rotInput.value, 10);
+
+      // Clamp ROT value to valid range
+      if (isNaN(rot) || rot < 2) rot = 2;
+      if (rot > 25) rot = 25;
+      rotInput.value = rot;
+
+      const phrase = phraseInput.value.trim();
+      if (phrase === "") {
+        alert("Please enter a phrase.");
+        return;
+      }
+
+      // Apply transformations: ROT → remove spaces → reverse
+      let result = rotAll(phrase, rot);
+      result = result.replace(/\s/g, '');
+      result = result.split('').reverse().join('');
+
+      // Display result
+      const outEl = document.getElementById("output");
+      outEl.textContent = result;
+      outEl.style.display = "block";
+      document.getElementById("copyBtn").style.display = "inline";
+      document.getElementById("message").textContent = "";
+    }
+
+    function copyToClipboard() {
+      const text = document.getElementById("output").textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        document.getElementById("message").textContent = "✅ Copied to clipboard!";
+      }, () => {
+        document.getElementById("message").textContent = "❌ Copy failed (your browser may not support this).";
+      });
+    }
+  </script>
+</body>
+</html>
