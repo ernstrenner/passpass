@@ -1,66 +1,96 @@
-# 🔐 PassPass
+# PassPass – Protected Access Safe Secure
+
+![Screenshot of the PassPass UI](./pass-pass-screenshot.png)
 
 **Generate strong, deterministic passwords from natural phrases — processed with reversible logic (ROT-N + enhancements) — usable online, offline, or even with pen and paper.**
 
-## ✨ Why PassPass?
+---
 
-PassPass is a privacy-first tool built for security-conscious travelers, creators, and anyone who needs access to complex passwords — **without storing them anywhere**.
+## 🔗 Try It Now
 
-- 🚫 No local storage
-- ✅ Fully offline, works in-browser
-- 🔃 Reconstructable by hand if needed
-- 🧠 Designed to live in your memory, not in a vault
-
-## 🛠 How It Works
-
-1. You input a familiar phrase like:
-
-My favorite ice cream is Erdbeer Eis!
-
-
-2. Set a **ROT-N** transformation number (like `7`)
-3. The tool:
-    - Applies a Caesar cipher (ROT-N) to A–Z/a–z letters only
-    - Keeps all non-alphabet characters intact (`0-9`, `!@#$`, emoji, etc)
-    - Removes spaces
-    - Reverses the string
-
-4. 🎯 You get the **output password**, which will _always_ be the same given the same input + ROT value.
-
-## 🔒 Example
-
-> **ROT**: 5  
-> **Passphrase**:  
-> `Ice cream in Vienna is awesome!`
-
-> 🔑 **Output**:  
-> `!jtrjxbtNXNfnnsnjHTZHVjhj`
-
-## 💻 Usage
-
-- Download the latest [`passpass.html`](./passpass.html)
-- Open in any browser (online or offline)
-- Type your ROT number + phrase
-- Click “Transform” — and optionally “Copy to Clipboard”
-
-## 🧠 Manual Reconstruction (No Computer Needed)
-
-PassPass is designed so you can decode your own password **manually** if needed:
-
-1. Apply Caesar shift (A–Z or a–z) letter-by-letter
-2. Remove spaces
-3. Reverse the result
-
-This gives you **full access** even if you only have a pencil and memory.
+- **Live demo**: [https://ernstrenner.com/passpass.html](https://ernstrenner.com/passpass.html)
+- **Clone or download**: open [`passpass.html`](./passpass.html) locally or on any device
 
 ---
 
-## 📎 License
+## Why PassPass?
 
-Released under the [Apache License, Version 2.0](LICENSE)
+PassPass is a privacy-first, no-storage password generator for travelers, creators, and anyone who prefers logic over cloud sync.
+
+- No password vaults required
+- 100% offline and works with any browser
+- Reconstructable with pen and paper
+- Designed to live in your **brain**, not your device
 
 ---
 
-💡 Want to learn more about why this tool was created?  
-Read the [companion blog post](https://ernstrenner.com/members/passpass-a-robust-password-generator-for-people-on-the-move/).
+## How It Works
 
+1. Enter a **ROT-N** value (2–25)
+2. Input a **memorable phrase** like:  
+   `My favorite ice cream is Erdbeer Eis!`
+3. Behind the scenes, PassPass:
+   - Applies a Caesar cipher (ROT-N) to A–Z / a–z only
+   - Leaves numbers, punctuation, and emojis untouched
+   - Removes spaces
+   - Reverses the final string
+
+⚙️ The result is a **strong, repeatable password** — with no storage or syncing needed.
+
+---
+
+## Example
+
+> **ROT**: `5`  
+> **Phrase**: `Ice cream in Vienna is awesome!`  
+> **→ Output**: `!jtrjxbtNXNfnnsnjHTZHVjhj`
+
+---
+
+## How to Use
+
+- Download or clone this repo
+- Open `passpass.html` in any browser (works offline)
+- Set your ROT and phrase
+- Click **Transform**
+- Copy your generated password directly
+
+---
+
+## Manual Method (No Device)
+
+If needed, PassPass can be reconstructed without a computer:
+
+1. Manually ROT each letter using your ROT value
+2. Remove all spaces
+3. Reverse the result string
+
+That's it. Your password is always recoverable — by logic alone.
+
+---
+
+## 🔐 Security Philosophy
+
+PassPass is not encryption — it’s transformation.  
+It gives you back control using layered logic that only *you* know:
+
+- ✅ ROT-based transformation (user-chosen)
+- ✅ Standard space stripping + string reversal
+- ✅ Deterministic output — no secrets stored
+
+Because nothing is stored, leaked, or synced — *there’s nothing to steal.*
+
+---
+
+## 📄 License
+
+Released under the [Apache License, Version 2.0](./LICENSE)
+
+---
+
+## 📖 Learn More
+
+Want to understand the mindset and use cases behind PassPass?
+
+📝 **Read the companion blog post:**  
+[PassPass: A Robust Password Generator for People on the Move](https://ernstrenner.com/members/passpass-a-robust-password-generator-for-people-on-the-move/)
